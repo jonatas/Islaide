@@ -36,7 +36,6 @@ class Islaide
      else
         tag = "p"
      end
-     tag ||= "p"
      
      if css_class = alignment(snippet)
         css_class = " class='#{css_class}'"
