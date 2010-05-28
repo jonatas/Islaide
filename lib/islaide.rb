@@ -1,45 +1,22 @@
-class Islaide
-    FORMATTERS = {
-        '#'   => {name:'title',      html: 'h1'},
-        '##'  => {name:'subtitle',   html: 'h2'},
-        '###' => {name:'subsubtitle',html: 'h3'},
-        '*'   => {name:'bullet',     html: 'li'},
-        '$'   => {name:'code',       html: 'pre'}
-    }
+require "rubygems"
+gem "bluecloth"
+require "bluecloth"
 
-    SOME_FORMATTER = %r[^(\#{1,3}|\*|\$)]
+class Islaide
 
     ALIGNMENTS = {'>'  => 'right',
-                  '|'  => 'center',
-                  '<'  => 'left'}
+                "&gt;"  => 'right',
+                "&lt;"  => 'left',
+                  '<'  => 'left',
+                  '|'  => 'center' }
 
-   def self.alignment(string)
-      ALIGNMENTS[string[0]]
-   end
-
-   def self.formatter(string)
-      if string =~ SOME_FORMATTER
-         FORMATTERS[$1][:name]
-      end
-   end
-
-   def self.html_tag string
-      if string =~ SOME_FORMATTER
-         FORMATTERS[$1][:html]
-      end
-   end
 
    def self.parse string
-      snippet, content = string.split(" ")
-     if tag = html_tag(snippet) 
-        snippet.gsub!(SOME_FORMATTER, '')
-     else
-        tag = "p"
+     html = BlueCloth.new(string).to_html 
+     while html =~ %r{<(\w+)>([>\|<]|&lt;)\s?(.*)</\1>}im
+        html = "<#{$1} class='#{ALIGNMENTS[$2]||$2}'>#{$3}</#{$1}>"
      end
-     
-     if css_class = alignment(snippet)
-        css_class = " class='#{css_class}'"
-     end
-     "<#{tag}#{css_class}>#{content}</#{tag}>"
+
+     html
    end
 end
