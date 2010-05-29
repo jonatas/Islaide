@@ -1,9 +1,4 @@
-require "rubygems"
-gem "bluecloth"
-require "bluecloth"
-
-class Islaide
-
+class Islaide < Sinatra::Application
     ALIGNMENTS = {'>'  => 'right',
                 "&gt;"  => 'right',
                 "&lt;"  => 'left',
@@ -12,11 +7,24 @@ class Islaide
 
 
    def self.parse string
-     html = BlueCloth.new(string).to_html 
-     while html =~ %r{<(\w+)>([>\|<]|&lt;)\s?(.*)</\1>}im
-        html = "<#{$1} class='#{ALIGNMENTS[$2]||$2}'>#{$3}</#{$1}>"
+     html = Maruku.new(string.gsub("\n\n", '\n')).to_html 
+
+     while html =~ %r{<(\w+)(.*)>([>\|<]|\&lt;|&gt;)\s+(.*)</\1>}im
+       html = html.gsub(%r{<(\w+)(.*)>([>\|<]|\&lt;|&gt;)\s+(.*)</\1>}im,
+                 "<#{$1}#{$2} class='#{ALIGNMENTS[$3]}'>#{$4}</#{$1}>")
      end
 
+
+     puts html
      html
    end
+
+   get "/play" do
+      @presentation = []
+      @title = "Welcome to Islaide!"
+     erb :play
+   end
+
+
 end
+
