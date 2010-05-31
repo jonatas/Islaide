@@ -15,32 +15,36 @@ class Islaide < Sinatra::Application
                   '$'  => 'code',
                   '|'  => 'center' }
 
-    TAG_WITH_ALIGNMENTS = %r{<(\w+)(.*)>([>\|<\$]|\&lt;|&gt;)\s+(.*)</\1>}im
+    TAG_WITH_ALIGNMENTS = %r{<(\w+)(.*)>([>\|<\$]|\&lt;|&gt;)\s+(.*)</\1>}i
 
    def self.parse string
-     html = Maruku.new(string.gsub("\n\n", '\n')).to_html 
+     html = Maruku.new(string).to_html 
 
-     while html =~ TAG_WITH_ALIGNMENTS
-       element = $1
-       element = "pre" if $3 == "$"
-       html = html.gsub(TAG_WITH_ALIGNMENTS,
-                 "<#{element}#{$2} class='#{ALIGNMENTS[$3]}'>#{$4}</#{element}>")
-     end
+     html = html.split("\n").collect do |line|
+     if line=~ TAG_WITH_ALIGNMENTS
+             element = $1
+             element = "pre" if $3 == "$"
+             line= line.gsub(TAG_WITH_ALIGNMENTS,
+             "<#{element}#{$2} class='#{ALIGNMENTS[$3]}'>#{$4}</#{element}>")
+      end
+     line
 
-     puts html
+     end.join
+
      html
    end
 
    get "/play" do
       @presentation = [
       Page.new("# title           
-## subtitle       
-##< mini hello    
-###> sub on right 
-\| center
-$ puts 'hello'"),
-Page.new("# titulo principal
-##\| sub titulo 
+
+##< left    
+
+###> right 
+
+\| center"),
+Page.new("#| sub titulo 
+
 * primeiro ponto 
 - segundo ponto 
 

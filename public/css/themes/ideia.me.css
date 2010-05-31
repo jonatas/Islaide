@@ -1,0 +1,24 @@
+body {
+  font-family: Arial;
+  color:white;
+  text-align:left;
+  background-image: url(/images/themes/ideia.me/background5.jpg);
+  background-repeat: no-repeat;
+  background-position: top center;
+}
+
+h1, h2, h3, li, pre, #footer, #help {
+ background: rgba(0, 0, 0, 0.44);
+ color:white;
+}
+
+li, pre {
+ font-size: 2em;
+ width: 60%;
+ margin-left:10%;
+} 
+
+pre, #footer {
+ width: 80%;
+}
+
