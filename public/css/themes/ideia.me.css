@@ -7,14 +7,18 @@ body {
   background-position: top center;
 }
 
-h1, h2, h3, li, pre, #footer, #help {
+h1, h2, h3, li, #footer, #help {
  background: rgba(0, 0, 0, 0.44);
  color:white;
+}
+pre {
+ background: rgba(0, 0, 0, 0.74);
+ font-size: 3em;
 }
 
 li, pre {
  font-size: 2em;
- width: 60%;
+ width: 80%;
  margin-left:10%;
 } 
 

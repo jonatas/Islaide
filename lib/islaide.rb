@@ -1,3 +1,4 @@
+# coding: utf-8
 
 class Page 
     attr_accessor :content, :ref
@@ -34,6 +35,10 @@ class Islaide < Sinatra::Application
      html
    end
 
+   before do
+     headers['Content-Type'] = 'text/html; charset=utf-8'
+   end
+
    get "/play" do
       @presentation = [
       Page.new("# title           
@@ -43,13 +48,19 @@ class Islaide < Sinatra::Application
 ###> right 
 
 \| center"),
-Page.new("#| sub titulo 
+Page.new(%\#| Web 2.0 
 
-* primeiro ponto 
-- segundo ponto 
+* Javascript V8 Engine
+* Chromium OS 
+* HTML5
+* jQuery
+* Mundo *mobile*
+* 2D and 3D drawing (Canvas, WebGL, SVG) 
 
-$ puts 'hello'")
-      ]
+$ HTML5.should_be "awesome"\)
+      
+]
+
       puts @presentation
 
       @title = "Welcome to Islaide!"

@@ -13,7 +13,6 @@ var incrSteps = 0
 var incrElem
 var incrCurr = 0
 var incrCode = false
-var debugMode = false
 var gotoSlidenum = 0
 var shiftKeyActive = false
 
@@ -29,7 +28,6 @@ function setupPreso(load_slides, prefix) {
  
   loadSlides(load_slides, prefix)
 
-  doDebugStuff()
 
   // bind event handlers
   document.onkeydown = keyDown
@@ -71,7 +69,6 @@ function initializePresentation(prefix) {
     timeout: 0
   })
 
-  setupMenu()
   if (slidesLoaded) {
     showSlide()
     alert('slides loaded')
@@ -79,7 +76,7 @@ function initializePresentation(prefix) {
     showFirstSlide()
     slidesLoaded = true
   }
-  sh_highlightDocument(prefix+'/js/sh_lang/', '.min.js')
+  prettyPrint();
 }
 
 function centerSlides(slides) {
@@ -96,27 +93,6 @@ function centerSlide(slide) {
     mar_top = 0
   }
   slide_content.css('margin-top', mar_top)
-}
-
-function setupMenu() {
-  $('#navmenu').hide();
-
-  var currSlide = 0
-  var menu = new ListMenu()
-
-  slides.each(function(s, elem) {
-    content = $(elem).children(".content")
-    shortTxt = $(content).text().substr(0, 20)
-    path = $(content).attr('ref').split('/')
-    currSlide += 1
-    menu.addItem(path, shortTxt, currSlide)
-  })
-
-  $('#navigation').html(menu.getList())
-  $('#navmenu').menu({
-    content: $('#navigation').html(),
-    flyOut: true
-  });
 }
 
 function gotoSlide(slideNum) {
@@ -240,20 +216,6 @@ function prevStep() {
   return showSlide(true) // We show the slide fully loaded
 }
 
-function doDebugStuff()
-{
-  if (debugMode) {
-    $('#debugInfo').show()
-    debug('debug mode on')
-  } else {
-    $('#debugInfo').hide()
-  }
-}
-
-function debug(data)
-{
-  $('#debugInfo').text(data)
-}
 //  See e.g. http://www.quirksmode.org/js/events/keys.html for keycodes
 function keyDown(event)
 {
@@ -262,7 +224,6 @@ function keyDown(event)
     if (event.ctrlKey || event.altKey || event.metaKey)
        return true;
 
-    debug('keyDown: ' + key)
  
     if (key >= 48 && key <= 57) // 0 - 9
     {
@@ -271,7 +232,6 @@ function keyDown(event)
     }
     if (key == 13 && gotoSlidenum > 0)
     {
-      debug('go to ' + gotoSlidenum);
       slidenum = gotoSlidenum - 1;
       showSlide(true);
     }
@@ -286,11 +246,6 @@ function keyDown(event)
       if (shiftKeyActive) { prevStep() }
       else                { nextStep() }
     }
-    else if (key == 68) // 'd' for debug
-    {
-      debugMode = !debugMode
-      doDebugStuff()
-    }
     else if (key == 37 || key == 33) // Left arrow or page up
     {
       prevStep()
@@ -298,17 +253,6 @@ function keyDown(event)
     else if (key == 39 || key == 34) // Right arrow or page down
     {
       nextStep()
-    }
-    else if (key == 82) // R for reload
-    {
-      if (confirm('really reload slides?')) {
-        loadSlides()
-        showSlide()
-      }
-    }
-    else if (key == 84 || key == 67)  // T or C for table of contents
-    {
-      $('#navmenu').toggle().trigger('click')
     }
     else if (key == 90) // z for help
     {
@@ -332,7 +276,6 @@ function toggleFooter()
 
 function keyUp(event) {
   var key = event.keyCode;
-  debug('keyUp: ' + key);
   if (key == 16) // shift key
   {
     shiftKeyActive = false;
