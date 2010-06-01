@@ -1,5 +1,14 @@
 # coding: utf-8
 
+class Presentation 
+    attr_accessor :author, :title, :email, :pages 
+    def initialize attrs
+        self.author = attrs[:author]
+        self.title = attrs[:title]
+        self.email= attrs[:email]
+        self.pages = [Page.new("#| #{self.title}")]
+    end
+end
 class Page 
     attr_accessor :content, :ref
     def initialize(content, ref=nil)
@@ -39,31 +48,17 @@ class Islaide < Sinatra::Application
      headers['Content-Type'] = 'text/html; charset=utf-8'
    end
 
+   get "/?" do
+     erb :new
+   end
+   post "/create" do
+      @presentation = Presentation.new params[:presentation]
+
+      erb :edit
+   end
+
    get "/play" do
-      @presentation = [
-      Page.new("# title           
-
-##< left    
-
-###> right 
-
-\| center"),
-Page.new(%\#| Web 2.0 
-
-* Javascript V8 Engine
-* Chromium OS 
-* HTML5
-* jQuery
-* Mundo *mobile*
-* 2D and 3D drawing (Canvas, WebGL, SVG) 
-
-$ HTML5.should_be "awesome"\)
-      
-]
-
-      puts @presentation
-
-      @title = "Welcome to Islaide!"
+      @title = @presentation.title
      erb :play
    end
 end

@@ -1,0 +1,18 @@
+<fieldset>
+  <legend>Criando sua apresentação</legend>
+  <form action="/create" method="post">
+      <label for="title">Tema</label><br />
+      <input type="text" name="presentation[title]" id="title" />
+
+      <label for="author">Qual é o seu nome?</label><br />
+      <input type="text" name="presentation[author]" id="author" />
+
+      <label for="email">Qual é o seu email?</label><br />
+      <input type="text" name="presentation[email]" id="email" />
+
+      <label for="password">Qual é a senha desta apresentação?</label><br />
+      <input type="text" name="presentation[password]" id="password" />
+
+      <input type="submit" value="Iniciar apresentação" />
+</form>
+</fieldset>
