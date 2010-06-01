@@ -1,2 +1,8 @@
+<form action="/add" id="form-master" method="post" style="display:none">
+  <input id="master" type="text"  /> 
+  <input type="submit" value="+" id="add"/>
+</form>
+
 <%= erb :play, :layout => false %>
-<input id="master" type="text" placeholder="* digite aqui" autofocus />
+
+<script type="text/javascript">islaide.edit();</script>

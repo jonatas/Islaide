@@ -14,6 +14,8 @@ Funcionalidade: Criar uma nova apresentação
     Quando eu pressionar "Iniciar apresentação"
 
     Então devo ver "Jonatas Paganini"
+    Dado que preenchi "* HTML 5" no campo "master"
+    Quando eu pressionar "add"
 
 
 

@@ -35,21 +35,43 @@ function setupPreso(load_slides, prefix) {
   /* window.onresize  = resized; */
   /* window.onscroll = scrolled; */
   /* window.onunload = unloaded; */
+
 }
 
-function loadSlides(load_slides, prefix) { 
-  //load slides offscreen, wait for images and then initialize
-  if (load_slides) {
-  	$("#slides").load("/slides", false, function(){
-    	$("#slides img").batchImageLoad({
-			loadingCompleteCallback: initializePresentation(prefix)
-		})
-  	})
-  } else {
-	$("#slides img").batchImageLoad({
-		loadingCompleteCallback: initializePresentation(prefix)
-	})
+var islaide = {
+  edit: function(){
+    var $form = $("#form-master");
+   
+    $form.show("slide", {direction: "up"});  
+    $form.submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: $form.attr('action'), 
+                data: {item: $('#master').attr('value')},
+                success: function(data, textStatus) {
+                  element = $(data);
+                  element.hide();
+                  $('#preso > .slide > .content').append(element);
+                  element.fadeIn(2000);
+                  $('#master').focus();
+
+                }});
+            });
+
+    $('#master').css( { 
+        width: "100%",
+        height: "5%",
+        fontSize: "150%",
+        marginLeft:"50%" });
+
   }
+};
+
+function loadSlides(load_slides, prefix) { 
+    $("#slides img").batchImageLoad({
+        loadingCompleteCallback: initializePresentation(prefix)
+    });
 }
 
 function initializePresentation(prefix) {
@@ -140,19 +162,14 @@ function showSlide(back_step) {
   percent = getSlidePercent()
   $("#slideInfo").text((slidenum + 1) + '/' + slideTotal + '  - ' + percent + '%')
 
-  if(!back_step) {
-    // determine if there are incremental bullets to show
-    // unless we are moving backward
-    determineIncremental()
-  } else {
+  if(back_step) {
     incrCurr = 0
     incrSteps = 0
   }
 
   $('body').addSwipeEvents().
-    bind('swipeleft',  swipeLeft).
-    bind('swiperight', swipeRight)
-  removeResults()
+    bind('swipeleft',  prevStep).
+    bind('swiperight', nextStep)
 
   return getCurrentNotes()
 }
@@ -170,23 +187,6 @@ function getCurrentNotes()
 function getSlidePercent()
 {
   return Math.ceil(((slidenum + 1) / slideTotal) * 100)
-}
-
-function determineIncremental()
-{
-  incrCurr = 0
-  incrCode = false
-  incrElem = currentSlide.find(".incremental > ul > li")
-  incrSteps = incrElem.size()
-  if(incrSteps == 0) {
-    // also look for commandline
-    incrElem = currentSlide.find(".incremental > pre > code > code")
-    incrSteps = incrElem.size()
-    incrCode = true
-  }
-  incrElem.each(function(s, elem) {
-    $(elem).hide()
-  })
 }
 
 function prevStep()
@@ -264,7 +264,6 @@ function keyDown(event)
     }
 	else if (key == 27) // esc
 	{
-		removeResults();
 	}
     return true
 }
@@ -283,75 +282,4 @@ function keyUp(event) {
 }
 
 
-function swipeLeft() {
-  nextStep()
-}
 
-function swipeRight() {
-  prevStep()
-}
-
-function ListMenu(s)
-{
-  this.slide = s
-  this.typeName = 'ListMenu'
-  this.itemLength = 0;
-  this.items = new Array();
-  this.addItem = function (key, text, slide) {
-    if (key.length > 1) {
-      thisKey = key.shift()
-      if (!this.items[thisKey]) {
-        this.items[thisKey] = new ListMenu(slide)
-      }
-      this.items[thisKey].addItem(key, text, slide)
-    } else {
-      thisKey = key.shift()
-      this.items[thisKey] = new ListMenuItem(text, slide)
-    }
-  }
-  this.getList = function() {
-    var newMenu = $("<ul>")
-    for(var i in this.items) {
-      var item = this.items[i]
-      var domItem = $("<li>")
-      if (item.typeName == 'ListMenu') {
-        choice = $("<a rel=\"" + (item.slide - 1) + "\" href=\"#\">" + i + "</a>")
-        domItem.append(choice)
-        domItem.append(item.getList())
-      }
-      if (item.typeName == 'ListMenuItem') {
-        choice = $("<a rel=\"" + (item.slide - 1) + "\" href=\"#\">" + item.slide + '. ' + item.textName + "</a>")
-        domItem.append(choice)
-      }
-      newMenu.append(domItem)
-    }
-    return newMenu
-  }
-}
-
-function ListMenuItem(t, s)
-{
-  this.typeName = "ListMenuItem"
-  this.slide = s
-  this.textName = t
-}
-
-var removeResults = function() {
-  $('.results').remove();
-};
-
-var print = function(text) {
-  removeResults();
-  var _results = $('<div>').addClass('results').text($.print(text));
-  $('body').append(_results);
-  _results.click(removeResults);
-};
-
-$('.sh_javaScript code').live("click", function() {
-  result = null;
-  var codeDiv = $(this);
-  codeDiv.addClass("executing");
-  eval(codeDiv.text());
-  setTimeout(function() { codeDiv.removeClass("executing");}, 250 );
-  if (result != null) print(result);
-});

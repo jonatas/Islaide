@@ -57,6 +57,10 @@ class Islaide < Sinatra::Application
       erb :edit
    end
 
+   post '/add' do
+      Islaide.parse params[:item]
+   end
+
    get "/play" do
       @title = @presentation.title
      erb :play
