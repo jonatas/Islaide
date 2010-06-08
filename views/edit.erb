@@ -2,5 +2,40 @@
   <input id="master" type="text"  /> 
   <input type="submit" value="+" id="add"/>
 </form>
+<div id="help">
+    <table>
+        <tr><td class="key">space, &darr;</td><td>próximo</td></tr>
+        <tr><td class="key">&uarr;</td><td>anterior</td></tr>
+        <tr><td class="key">frase com **negrito** e *italico*</td>
+            <td><p>frase com <b>negrito</b> e <i>italico</i></td>
+        </tr>
+        <tr><td class="key">#| grande justificado</td>
+            <td><h1 class="center">grande justificado</h1></td>
+        </tr>
+        <tr>
+           <td class="key">###&lt; subsubtítulo direita</td>
+           <td>
+              <h3 class="right">subsubtítulo direita</h3>
+           </td>
+        </tr>
+        <tr>
+           <td class="key">##&lt; subtítulo esquerda</td>
+           <td>
+              <h2 class="left">subtítulo esquerda</h2>
+           </td>
+        </tr>
+        <tr>
+         <td class="key">* um item</td>
+         <td><ul><li>um item</li></ul></td>
+         </tr>
+         <tr>
+         <td class="key">$ alert("syntax")</td>
+         <td><pre class="code">alert("syntax")</pre></td>
+     </tr>
+ </table>
+</div>
 <%= erb :play, :layout => false %>
+
+<a id="icon-help" class='icon' href="#" title="precisando de ajuda?">?</a>
+<a id="icon-edit" class='icon' href="#" title="Insira mais conteúdo">+</a>
 <script type="text/javascript">islaide.edit();</script>

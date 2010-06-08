@@ -1,0 +1,16 @@
+<h1>Adicionados recentemente</h1>
+<hr />
+<% @presentations.each do |presentation| %>
+    <div class="presentation">
+        <h2>
+            <a href="/play/<%= presentation.id %>" target='_blank'>
+                <%= presentation.title %>
+            </a>
+        <small class="author">
+            <a href="/about/<%= presentation.author['name'] %>" target='_blank'>
+                <%= presentation.author['name'] %>
+            </a>
+        </small>
+  </h2>
+    </div>
+<% end %>

@@ -90,6 +90,8 @@ class Islaide < Sinatra::Application
       @author = Author.find_or_initialize_by_email_and_name(
              params[:presentation][:author][:email],
              params[:presentation][:author][:name])
+      
+      @author.save
 
       params[:presentation].delete('author')
                                  
@@ -126,9 +128,14 @@ class Islaide < Sinatra::Application
       html
    end
 
-   get "/play" do
-      @title = @presentation.title
-     erb :play
+   get "/last" do
+      @presentations = Presentation.all :limit => 10
+      erb :list, :layout => :islaide
+   end
+
+   get "/play/:presentation_id" do
+      @presentation = Presentation.find(params[:presentation_id])
+     erb :play, :layout => :layout
    end
 end
 

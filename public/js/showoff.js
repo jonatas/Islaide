@@ -79,12 +79,12 @@ var islaide = {
         marginLeft:"0" });
 
     $('#icon-help').live('click', function() {
-       $('#preso').toggle();
-       $('#footer').toggle();
-       $('#help').toggle();
+       $('#preso').toggle("slow");
+       $('#footer').toggle("slow");
+       $('#help').toggle("slow");
     });
     $('#icon-edit').live('click', function() {
-       $('#form-master').toggle();
+       $('#form-master').toggle("slow");
        $('#master').focus();
     });
 
