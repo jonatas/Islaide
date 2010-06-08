@@ -4,16 +4,11 @@
 
 require "rubygems"
 
-begin
     gem "sinatra"
-    gem 'mongo'
     gem "mongo_record"
-    gem "maruku"
-rescue Gem::LoadError
-    puts "$@@@@ load error #{$!}---\nTrace: #{$@}"
-end
+    gem "markdown"
 
-require "maruku"
+require "markdown"
 require "sinatra"
 require "mongo_record"
 
