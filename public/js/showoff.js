@@ -78,17 +78,29 @@ var islaide = {
         fontSize: "150%",
         marginLeft:"0" });
 
+    $('#icon-help').live('click', function() {
+       $('#preso').toggle();
+       $('#footer').toggle();
+       $('#help').toggle();
+    });
+    $('#icon-edit').live('click', function() {
+       $('#form-master').toggle();
+       $('#master').focus()"
+    });
+
   },
   newPresentation: function(){
     var $form = $("#new-presentation");
     $form.show("slide", {direction: "right"});  
     $("input[type='text']:first").focus();
 
+
     $form.css({ 
         width: "50%",
         height: "5%",
         fontSize: "150%",
         marginLeft:"20%" });
+
   } 
 };
 
@@ -175,14 +187,11 @@ function showSlide(back_step) {
     transition = 'scrollDown'
   }
 
-  $('#preso').cycle(slidenum, transition)
-
-  if (fullPage) {
-    $('#preso').css({'width' : '100%', 'overflow' : 'visible'});
-    currentSlide.css({'width' : '100%', 'text-align' : 'center', 'overflow' : 'visible'});
-  } else {
-    $('#preso').css({'width' : '1020px', 'overflow' : 'hidden'});
-  }
+  $('#preso').cycle(slidenum, transition);
+  var cssOptions = {'width' : '100%', 'overflow' : 'visible'};
+  
+  $('#preso').css(cssOptions);
+  currentSlide.css(cssOptions);
 
   percent = getSlidePercent()
   $("#slideInfo").text((slidenum + 1) + '/' + slideTotal + '  - ' + percent + '%')
