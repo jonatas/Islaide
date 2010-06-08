@@ -22,8 +22,8 @@ Funcionalidade: Criar uma nova apresentação
     * CSS 3D
     * WEBGL
     ==
-    HTML 5
-    > _Em busca de uma internet mais desktop_
+    \# HTML 5
+    \##> _Em busca de uma internet mais desktop_
     * Banco de dados SQLite
     * Compatibilidade com mobile
     $ alert('ola')

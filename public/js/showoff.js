@@ -85,7 +85,7 @@ var islaide = {
     });
     $('#icon-edit').live('click', function() {
        $('#form-master').toggle();
-       $('#master').focus()"
+       $('#master').focus();
     });
 
   },
