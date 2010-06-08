@@ -268,17 +268,11 @@ function keyDown(event)
     if (key == 16) // shift key
     {
       shiftKeyActive = true;
-    }
-    if (key == 32) // space bar
-    {
-      if (shiftKeyActive) { prevStep() }
-      else                { nextStep() }
-    }
-    else if (key == 37 || key == 33) // Left arrow or page up
+    } else if (key == 38 || key == 33) // Left arrow or page up
     {
       prevStep()
     }
-    else if (key == 39 || key == 34) // Right arrow or page down
+    else if (key == 40 || key == 34) // Right arrow or page down
     {
       nextStep()
     }
