@@ -6,9 +6,9 @@ require "rubygems"
 
     gem "sinatra"
     gem "mongo_record"
-    gem "markdown"
+    gem "maruku"
 
-require "markdown"
+require "maruku"
 require "sinatra"
 require "mongo_record"
 
