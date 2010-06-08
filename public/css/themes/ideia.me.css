@@ -7,17 +7,17 @@ body {
   background-position: top center;
 }
 
-h1, h2, h3, li, #footer, #help {
+h1, h2, h3, p, li, label, #footer, #help {
  background: rgba(0, 0, 0, 0.44);
  color:white;
 }
-pre {
+.slide > pre, p, ul {
  background: rgba(0, 0, 0, 0.74);
- font-size: 3em;
+ font-size: 1em;
 }
 
-li, pre {
- font-size: 2em;
+.slide > li, pre {
+ font-size: 1em;
  width: 80%;
  margin-left:10%;
 } 

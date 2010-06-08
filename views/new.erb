@@ -1,18 +1,26 @@
-<fieldset>
+<fieldset id="new-presentation" style="display:none"> 
   <legend>Criando sua apresentação</legend>
   <form action="/create" method="post">
-      <label for="title">Tema</label><br />
+      <label for="title">Digite o título da apresentação</label>
+      <br />
       <input type="text" name="presentation[title]" id="title" />
+      <br />
 
-      <label for="author">Qual é o seu nome?</label><br />
-      <input type="text" name="presentation[author]" id="author" />
+      <label for="author">Qual é o seu nome?</label>
+      <br />
+      <input type="text" name="presentation[author[name]]" id="author" />
+      <br />
 
-      <label for="email">Qual é o seu email?</label><br />
-      <input type="text" name="presentation[email]" id="email" />
+      <label for="email">Qual é o seu email?</label>
+      <br />
+      <input type="text" name="presentation[author[email]]" id="email" />
+      <br />
 
-      <label for="password">Qual é a senha desta apresentação?</label><br />
-      <input type="text" name="presentation[password]" id="password" />
-
+      <label for="password">Digite uma senha para esta apresentação?</label>
+      <br />
+      <input type="password" name="presentation[password]" id="password" />
+      <br />
       <input type="submit" value="Iniciar apresentação" />
 </form>
 </fieldset>
+<script type="text/javascript">islaide.newPresentation();</script>

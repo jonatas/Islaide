@@ -1,15 +1,12 @@
-require "rubygems"
-gem "maruku"
-gem "sinatra"
+require "lib/islaide"
 gem 'rspec'
 gem 'capybara'
 
-require "maruku"
-require "sinatra"
-require "lib/islaide"
 require 'capybara/cucumber'
 
 include Capybara
+
+MongoRecord::Base.connection = Mongo::Connection.new.db "cucumber"
 
 Capybara.app = Islaide 
 

@@ -48,24 +48,48 @@ var islaide = {
             $.ajax({
                 type: 'POST',
                 url: $form.attr('action'), 
-                data: {item: $('#master').attr('value')},
+                data: {item: $('#master').attr('value'),
+                       page: slidenum },
                 success: function(data, textStatus) {
-                  element = $(data);
-                  element.hide();
-                  $('#preso > .slide > .content').append(element);
-                  element.fadeIn(2000);
-                  $('#master').focus();
+                  if ($('#master').attr('value') != "=="){
+                     element = $(data);
+                     element.hide();
+                     currentSlide.find('.content').append(element);
+                     $('#master').val('');
+                     element.fadeIn(2000);
+                     prettyPrint();
 
+                  }else{
+
+                   $('#slides').append($(data));
+                   $('#master').val('#| ');
+
+                   initializePresentation();
+                   nextStep();
+                  }
+                  $('#master').focus();
                 }});
             });
 
-    $('#master').css( { 
+    $("input[type='text']:first").focus();
+
+    $('#master').css({ 
         width: "100%",
+        fontSize: "150%",
+        marginLeft:"0" });
+
+  },
+  newPresentation: function(){
+    var $form = $("#new-presentation");
+    $form.show("slide", {direction: "right"});  
+    $("input[type='text']:first").focus();
+
+    $form.css({ 
+        width: "50%",
         height: "5%",
         fontSize: "150%",
-        marginLeft:"50%" });
-
-  }
+        marginLeft:"20%" });
+  } 
 };
 
 function loadSlides(load_slides, prefix) { 
@@ -79,11 +103,11 @@ function initializePresentation(prefix) {
   centerSlides($('#slides > .slide'))
 
   //copy into presentation area
-  $("#preso").empty()
-  $('#slides > .slide').appendTo($("#preso"))
+//  $("#preso").empty()
+  $('#slides .slide').appendTo($("#preso"))
 
   //populate vars
-  slides = $('#preso > .slide')
+  slides = $('#preso .slide')
   slideTotal = slides.size()
 
   //setup manual jquery cycle
@@ -93,7 +117,6 @@ function initializePresentation(prefix) {
 
   if (slidesLoaded) {
     showSlide()
-    alert('slides loaded')
   } else {
     showFirstSlide()
     slidesLoaded = true
@@ -146,8 +169,10 @@ function showSlide(back_step) {
   var transition = currentSlide.attr('data-transition')
   var fullPage = currentSlide.find(".content").is('.full-page');
 
-  if (back_step || fullPage) {
-    transition = 'none'
+  if (fullPage) {
+    transition = ''
+  } else if (back_step) {
+    transition = 'scrollDown'
   }
 
   $('#preso').cycle(slidenum, transition)
@@ -224,12 +249,6 @@ function keyDown(event)
     if (event.ctrlKey || event.altKey || event.metaKey)
        return true;
 
- 
-    if (key >= 48 && key <= 57) // 0 - 9
-    {
-      gotoSlidenum = gotoSlidenum * 10 + (key - 48);
-      return true;
-    }
     if (key == 13 && gotoSlidenum > 0)
     {
       slidenum = gotoSlidenum - 1;
@@ -253,10 +272,6 @@ function keyDown(event)
     else if (key == 39 || key == 34) // Right arrow or page down
     {
       nextStep()
-    }
-    else if (key == 90) // z for help
-    {
-      $('#help').toggle()
     }
     else if (key == 66 || key == 70) // f for footer (also "b" which is what kensington remote "stop" button sends
     {

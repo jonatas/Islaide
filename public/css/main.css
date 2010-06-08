@@ -140,7 +140,7 @@ h3 { font-size: 2em; }
 
 h1, h2, h3 {
   font-weight: normal;
-  margin: 0.5em 0;
+  margin: 0.1em 0;
 }
 
 pre { margin-left: 40px; font-size: 2.8em; }
@@ -153,10 +153,29 @@ pre { margin-left: 40px; font-size: 2.8em; }
 #help {
     background: #9f9;
     position: absolute;
-    right: 80px;
+    right: 10px;
+    top: 150px;
     display: none;
-    z-index: 2147483647; //max, see http://www.puidokas.com/max-z-index/
 }
+
+#icon-help {
+    top: 10px;
+}
+
+#icon-edit {
+    top: 50px;
+}
+
+.icon {
+    font-family: Monospace;
+    font-weight: bold;
+    color: white;
+    font-size: 40px;
+    position: absolute;
+    right: 10px;
+    text-decoration:none;
+}
+
 #help table tr td.key {
     text-align: right;
     border-right: 2px solid #8b8;
@@ -174,8 +193,11 @@ pre { margin-left: 40px; font-size: 2.8em; }
 }
 #form-master { 
     width: 50%; 
-    height: 5%; 
     font-size: 150%; 
     left:25%;
+    margin-left:0;
+    overflow: visible;
+    position: absolute;
 }
+
 

@@ -1,22 +1,50 @@
 # coding: utf-8
 
-class Presentation 
-    attr_accessor :author, :title, :email, :pages 
-    def initialize attrs
-        self.author = attrs[:author]
-        self.title = attrs[:title]
-        self.email= attrs[:email]
-        self.pages = [Page.new("#| #{self.title}")]
+Encoding.default_internal="utf-8"
+
+require "rubygems"
+
+gem "maruku"
+gem "sinatra"
+gem 'mongo'
+gem "mongo_record"
+
+require "maruku"
+require "sinatra"
+require "mongo_record"
+
+NEW_PAGE = /^==$/
+
+module Mime 
+    class Type 
+        def split(*args) 
+            to_s.split(*args) 
+        end 
+    end 
+end 
+
+class Page  < MongoRecord::Subobject
+    fields :content, :ref
+    belongs_to :presentation
+
+    def content_html
+       Islaide.parse(content)
     end
 end
-class Page 
-    attr_accessor :content, :ref
-    def initialize(content, ref=nil)
-       
-        self.content = Islaide.parse(content)
-        self.ref = ref || "slide#{Time.now.to_i}"
-    end
+
+class Presentation  < MongoRecord::Base
+   collection_name :presentations
+
+   fields :title, :author, :password
+   belongs_to :author
+   has_many :pages, :class_name => 'Page'
 end
+class Author < MongoRecord::Base
+   collection_name :authors
+   fields :email, :name
+   has_many :presentations, :class_name => 'Presentation'
+end
+
 class Islaide < Sinatra::Application
     ALIGNMENTS = {'>'  => 'right',
                 "&gt;"  => 'right',
@@ -43,6 +71,11 @@ class Islaide < Sinatra::Application
 
      html
    end
+   enable :sessions
+
+   set :views,  File.expand_path(File.dirname(__FILE__) + '/../views')
+   set :public,  File.expand_path(File.dirname(__FILE__) + '/../public')
+
 
    before do
      headers['Content-Type'] = 'text/html; charset=utf-8'
@@ -51,14 +84,46 @@ class Islaide < Sinatra::Application
    get "/?" do
      erb :new
    end
-   post "/create" do
-      @presentation = Presentation.new params[:presentation]
 
+   post "/create" do
+    
+      @author = Author.find_or_initialize_by_email_and_name(
+             params[:presentation][:author][:email],
+             params[:presentation][:author][:name])
+
+      params[:presentation].delete('author')
+                                 
+      @presentation = Presentation.new params[:presentation]
+      @first_page =  Page.new(:content => "#| #{@presentation.title}", 
+                                  :ref => "slide#{Time.now.to_i}") 
+                                 
+       
+      @presentation.pages << @first_page
+      @presentation.author =  @author
+      @presentation.save
+
+      session[:current_presentation] = @presentation.id
+      
       erb :edit
    end
 
    post '/add' do
-      Islaide.parse params[:item]
+      html = Islaide.parse params[:item] 
+      @presentation = Presentation.find(session[:current_presentation])
+      if params[:item] =~ NEW_PAGE 
+          @presentation.pages << Page.new(:content => "", 
+                           :ref => "slide#{Time.now.to_i}") 
+
+         html = %{<div style="position: relative; top: 0px;" class="slide" data-transition="scrollUp">
+              <div style="margin-top: 0px;" ref="#{@presentation.pages.last.ref}" class="content"></div>
+            </div>}
+      else
+          page = params[:page] || @presentation.pages.size - 1
+          page = page.to_i
+         @presentation.pages[page].content << "\n#{params[:item]}"
+      end
+      @presentation.save
+      html
    end
 
    get "/play" do

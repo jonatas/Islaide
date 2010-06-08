@@ -14,9 +14,22 @@ Funcionalidade: Criar uma nova apresentação
     Quando eu pressionar "Iniciar apresentação"
 
     Então devo ver "Jonatas Paganini"
-    Dado que preenchi "* HTML 5" no campo "master"
-    Quando eu pressionar "add"
 
+    Dado que inseri os seguintes dados
+    """
+    * HTML 5
+    * Javascript
+    * CSS 3D
+    * WEBGL
+    ==
+    HTML 5
+    > _Em busca de uma internet mais desktop_
+    * Banco de dados SQLite
+    * Compatibilidade com mobile
+    $ alert('ola')
+    * Meta tags
+    """
+   
 
 
 
