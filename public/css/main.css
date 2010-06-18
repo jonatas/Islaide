@@ -22,7 +22,7 @@ body {
     bottom: 2px;
 }
 
-#author {
+span#author {
     position:absolute;
     right:0px;
     bottom: 2px;
