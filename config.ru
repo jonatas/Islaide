@@ -9,7 +9,7 @@ else
   conn = Mongo::Connection.new
 end
 
-MongoRecord::Base.connection = con
+MongoRecord::Base.connection = conn
     #Mongo::Connection.new(ENV['MONGOHQ_URL']).db "islaide"
 
 run Islaide
