@@ -37,7 +37,11 @@ class Presentation  < MongoRecord::Base
    fields :title, :author, :password
    belongs_to :author
    has_many :pages, :class_name => 'Page'
+   def author_object
+       @author_object ||= Author.find(author.object_id)
+   end
 end
+
 class Author < MongoRecord::Base
    collection_name :authors
    fields :email, :name
