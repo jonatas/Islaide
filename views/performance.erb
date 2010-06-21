@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<% # encoding: utf-8 %>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <title><%= @title %></title>
+
+        <meta name="google-site-verification" content="pEhVWERbmTGzsNq-acKyhMtjmxG2o5LUb6POdY0wBns" />
+        <script src="http://www.google.com/jsapi?key=ABQIAAAArYOF4yKN2_Dpo42LXgneURRClFnncuL58ZPRE4fBeXHL_xpARBSaUxRW5VmjLu9VUsUxs_Lbc7TVew" type="text/javascript"></script>
+       
+        <script type="text/javascript">
+            google.load('visualization', '1', {packages: ['corechart']});
+            google.load("jquery", "1");
+         </script>
+       </head>
+      <body>
+<div id="visualization"></div>
+<script type="text/javascript">
+
+function drawVisualization() {
+  // Create and populate the data table.
+    var url = "/presentation/<%= @presentation.id %>.json";
+    $.getJSON(url, function (presentation) {
+      var table = new google.visualization.DataTable(); 
+      var pages =  presentation.pages;
+      table.addRows(pages.length);
+
+      for (var i = 0; i < pages.length; i++) {
+        table.addColumn('number',pages[i].title);
+        table.setCell(i, i, pages[i].time);
+      }
+
+      new google.visualization.LineChart(document.getElementById('visualization')).draw(table, null);
+    });
+}
+drawVisualization();
+
+</script>
+      </body>
+</html>

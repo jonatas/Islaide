@@ -7,10 +7,12 @@ require "rubygems"
     gem "sinatra"
     gem "mongo_record"
     gem "maruku"
+    gem "json"
 
 require "maruku"
 require "sinatra"
 require "mongo_record"
+require "json"
 
 NEW_PAGE = /^==$/
 
@@ -29,6 +31,20 @@ class Page  < MongoRecord::Subobject
     def content_html
        Islaide.parse(content)
     end
+    def time 
+       if ref =~ /(\d+)/
+           $1.to_i
+       end
+    end
+
+    def title
+      content.split("\n")[1]
+    end
+    def to_json
+        {:title => title,
+         :time => self.presentation.first_second - time,
+         :content => content}
+    end
 end
 
 class Presentation  < MongoRecord::Base
@@ -40,12 +56,23 @@ class Presentation  < MongoRecord::Base
    def author_object
        @author_object ||= Author.find(author.object_id)
    end
+   def first_second 
+       @first_second ||= pages.first.time
+   end
+   def to_json
+       {:author => author_object.to_json,
+        :pages => pages.collect{|e|e.to_json},
+        :title => title}.to_json
+   end
 end
 
 class Author < MongoRecord::Base
    collection_name :authors
    fields :email, :name
    has_many :presentations, :class_name => 'Presentation'
+   def to_json
+       {:email => email, :name => name}.to_json
+   end
 end
 
 class Islaide < Sinatra::Application
@@ -138,7 +165,16 @@ class Islaide < Sinatra::Application
 
    get "/play/:presentation_id" do
       @presentation = Presentation.find(params[:presentation_id])
-     erb :play, :layout => :layout
+      erb :play, :layout => :layout
+   end
+
+   get "/performance/:presentation_id" do
+      @presentation = Presentation.find(params[:presentation_id])
+      erb :performance, :layout => false
+   end
+   get "/presentation/:presentation_id.json" do
+      content_type :json
+      Presentation.find(params[:presentation_id]).to_json
    end
 end
 
